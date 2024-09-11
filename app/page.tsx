@@ -197,8 +197,8 @@ const Home = () => {
       <section className={"max-w-full py-8 px-4 gap-8 md:p-10 text-center bg-secondary"}>
         <h1 className={'text-4xl font-bold'}>Benefits of automation</h1>
 
-        <div className={'flex flex-col mt-10 max-w-full md:max-w-3/4'}>
-          <div className={"flex justify-center md:w-3/5 mx-auto"}>
+        <div className={'flex flex-col gap-8 mt-10 max-w-full md:max-w-3/4'}>
+          <div className={"flex justify-center gap-8 md:w-3/5 mx-auto"}>
             <Card className={"w-1/2 bg-secondary"}>
               <CardContent className={"flex flex-col items-center"}>
                 <Users className={"size-20"}/>
@@ -213,7 +213,7 @@ const Home = () => {
             </Card>
           </div>
 
-          <div className={"flex justify-center md:w-3/5 mx-auto"}>
+          <div className={"flex justify-center gap-8 md:w-3/5 mx-auto"}>
             <Card className={"w-1/2 bg-secondary"}>
               <CardContent className={"flex flex-col items-center"}>
                 <ChartNetwork className={"size-20"}/>
@@ -228,7 +228,7 @@ const Home = () => {
             </Card>
           </div>
 
-          <div className={"flex justify-center md:w-3/5 mx-auto"}>
+          <div className={"flex justify-center gap-8 md:w-3/5 mx-auto"}>
             <Card className={"w-1/2 bg-secondary"}>
               <CardContent className={"flex flex-col items-center"}>
                 <HandCoins className={"size-20"}/>
