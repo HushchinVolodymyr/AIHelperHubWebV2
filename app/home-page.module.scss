@@ -1,0 +1,63 @@
+﻿.homePageContainer {
+  display: flex;
+  flex-direction: column;
+  
+  .bannerSection {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    
+    .bannerImg {
+      position: relative;
+      bottom: 0;
+    }
+    
+    .bannerDescription {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  
+  .businessSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .problemsSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .carouselLeft{
+      display: flex;
+    }
+    .carouselRight{
+      display: flex;
+    }
+  }
+  
+  .whatWeDoSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 435px) {
+  .homePageContainer {
+    
+    .problemsSection {
+      
+      .carouselLeft{
+        display: none;
+      }
+      .carouselRight{
+        display: none;
+      }
+    }
+  }
+}

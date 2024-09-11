@@ -1,0 +1,55 @@
+﻿.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  .logoContainer {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .asideContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    
+    .sheetContainer {
+      display: none;
+    }
+    
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .headerContainer {
+    
+    .asideContainer {
+      
+      .tryButton {
+        display: none;
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 435px) {
+  .headerContainer {
+    
+    .navContainer {
+      display: none;
+    }
+    
+    .asideContainer {
+      
+      .sheetContainer{
+        display: block;
+      }
+    }
+  }
+}
