@@ -91,6 +91,10 @@ const Page = () => {
     chatEndRef.current?.scrollIntoView({behavior: "smooth"});
   }, [chatHistory])
 
+  useEffect(() => {
+    setChatHistory([]);
+  }, [assistantChecked]);
+
   const onSubmit = async (values: z.infer<typeof messageFormSchema>) => {
     if (values.message.trim() === "") {
       toast({
@@ -141,19 +145,23 @@ const Page = () => {
     }
   }
 
+  const formatText = (text: string) => {
+    return text.replace(/\n/g, '<br/>');
+  };
+
   return (
     <main className={'flex flex-col justify-end h-[92vh] w-full sm:w-3/4 overflow-hidden'}>
       <ScrollArea className={'flex flex-col justify-end h-full w-full sm:w-3/4 mx-auto'}>
         <div className={"p-1/2 sm:p-4 flex flex-col justify-end w-full min-h-full sm:w-full mx-auto self-end"}>
           {chatHistory.map((message) => (
-            <div key={message.id} className={`h-full flex flex-col m-2 rounded-2xl + ${message.messageType ?
-              "bg-secondary my-1 sm:my-2 p-2 sm:p-3 sm:px-4 text-end self-end flex justify-end"
+            <div key={message.id} className={`h-full my-1 sm:my-2 p-2 flex flex-col m-2 rounded-2xl + ${message.messageType ?
+              "bg-secondary p-2 sm:p-3 sm:px-4 text-end self-end justify-end"
               :
-              "bg-background my-1 sm:my-2 p-2 sm:p-4"}`}
+              "bg-background sm:p-4"}`}
             >
               <div className={'flex'}>
                 {!message.messageType ? <BotMessageSquare className={'size-8 w-12'}/> : null}
-                <h1 className={"text-l w-full"}>{message.message}</h1>
+                <p className={"text-l xm:text-xl w-full"} dangerouslySetInnerHTML={{__html: formatText(message.message)}}/>
               </div>
             </div>
           ))}
@@ -165,7 +173,9 @@ const Page = () => {
         <DropdownMenu>
           <DropdownMenuTrigger><ChevronUp/></DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuRadioGroup value={assistantChecked} onValueChange={setAssistantChecked}>
+            <DropdownMenuRadioGroup value={assistantChecked} onValueChange={
+              setAssistantChecked
+            }>
               {assistants.map(assistant => (
                 <DropdownMenuRadioItem key={assistant.id} value={assistant.name}>
                   {assistant.name}
@@ -182,13 +192,13 @@ const Page = () => {
               render={({field}) => (
                 <FormItem className={"w-full"}>
                   <FormControl>
-                    <Input placeholder={"Message..."} {...field} className={""}/>
+                    <Input placeholder={"Message..."} {...field} className={"h-12 text-xl"} />
                   </FormControl>
                   <FormMessage/>
                 </FormItem>
               )}
             />
-            <Button type="submit" variant={"secondary"}><Send/></Button>
+            <Button type="submit" variant={"secondary"} className={"h-12 w-12"}><Send className={"h-10 w-10"}/></Button>
           </form>
         </Form>
       </section>
