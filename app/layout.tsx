@@ -3,7 +3,6 @@ import "./globals.css";
 import {ThemeProvider} from "@/components/theme-provider";
 import Header from "@/components/header/header";
 import {Toaster} from "@/components/ui/toaster";
-import Footer from "@/components/footer/footer";
 import { Montserrat } from 'next/font/google';
 
 const montserrat = Montserrat({
