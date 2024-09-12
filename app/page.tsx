@@ -30,6 +30,7 @@ import fourthFuncImg from '@/public/home-page/functions-section/4.jpg'
 import fifthFuncImg from '@/public/home-page/functions-section/5.jpg'
 import sixthFuncImg from '@/public/home-page/functions-section/6.jpg'
 import Link from "next/link";
+import Footer from "@/components/footer/footer";
 
 const problems: ICardData[] = [
   {
@@ -251,6 +252,7 @@ const Home = () => {
           <Link href={'/chat'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
         </Button>
       </section>
+      <Footer/>
     </main>
   );
 };

@@ -112,7 +112,7 @@ const Page = () => {
   }
 
   return (
-    <main className={'flex flex-col justify-end h-[84vh] w-full sm:w-3/4 overflow-hidden'}>
+    <main className={'flex flex-col justify-end h-[92vh] w-full sm:w-3/4 overflow-hidden'}>
       <ScrollArea className={'flex flex-col justify-end h-full w-full sm:w-3/4 mx-auto'}>
         <div className={"p-1/2 sm:p-4 flex flex-col justify-end w-full min-h-full sm:w-full mx-auto self-end"}>
           {chatHistory.map((message) => (

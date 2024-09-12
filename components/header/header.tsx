@@ -15,10 +15,10 @@ import {
 
 const Header = () => {
   return (
-    <header className={'w-full bg-background'}>
-      <div className={`${styles.headerContainer} h-16 px-6 md:w-3/5 w-full mx-auto`}>
+    <header className={'w-full bg-background h-[8vh] sm:h-16'}>
+      <div className={`${styles.headerContainer} px-6 md:w-3/5 w-full h-full mx-auto`}>
         <aside className={`${styles.logoContainer} h-10`}>
-          <Link href={'/'} className={'text-2xl font-bold'}>AiHelperHub</Link>
+          <Link href={'/'} className={'text-3xl xm:text-2xl font-bold'}>AiHelperHub</Link>
         </aside>
 
         <nav className={`${styles.navContainer} gap-4`}>
@@ -27,17 +27,19 @@ const Header = () => {
           <Link href='/' className={'text-xl'}>Contact</Link>
         </nav>
 
-        <aside className={`${styles.asideContainer} gap-2`}>
+        <aside className={`${styles.asideContainer} gap-2 h-full `}>
           <Button className={`${styles.tryButton}  text-10`} variant='secondary' asChild>
             <Link href='/chat'>Try <ArrowUpRight className={'h-10'}/></Link>
           </Button>
 
-          <ModeToggle/>
+          <div className={"flex items-center justify-center h-full"}> 
+            <ModeToggle/>
+          </div>
 
-          <div className={styles.sheetContainer}>
+          <div className={`${styles.sheetContainer} `}>
             <Sheet>
-              <SheetTrigger>
-                <Menu className={'flex align-center justify-center'}/>
+              <SheetTrigger className={"flex items-center justify-center h-full"}>
+                <Menu className={'flex align-center justify-center scale-120 my-auto size-8'}/>
               </SheetTrigger>
               <SheetContent side="top">
                 <SheetHeader>
