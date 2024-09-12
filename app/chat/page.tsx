@@ -1,17 +1,19 @@
 ﻿"use client"
 
 import React, {useEffect, useRef, useState} from 'react';
+import {zodResolver} from "@hookform/resolvers/zod"
+import {z} from "zod"
+
 import {ScrollArea} from "@/components/ui/scroll-area"
-import {IMessage} from "@/interfaces/iChatHistory";
 import {BotMessageSquare, ChevronUp, Send} from "lucide-react";
 import {useForm} from "react-hook-form";
 import {FormControl, FormField, FormItem, Form, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 
-import {zodResolver} from "@hookform/resolvers/zod"
-import {z} from "zod"
+import IMessage from "@/interfaces/iMessage";
 import IAssistant from "@/interfaces/iAssistant";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +22,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {toast} from "@/hooks/use-toast";
+import {IRequestData} from "@/interfaces/iRequestData";
+import axios from "axios";
 
 // const messages: IMessage[] = [
 //   {
@@ -84,31 +88,57 @@ const Page = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    chatEndRef.current?.scrollIntoView({behavior: "smooth"});
   }, [chatHistory])
-  
-  function onSubmit(values: z.infer<typeof messageFormSchema>) {
-    if (values.message === "") {
+
+  const onSubmit = async (values: z.infer<typeof messageFormSchema>) => {
+    if (values.message.trim() === "") {
       toast({
         variant: "destructive",
         description: "Empty message!",
       })
       return
     }
-    
+
+    const updateChatHistory = (message: IMessage) => {
+      setChatHistory(prevHistory => [...prevHistory, message]);
+    }
+
     const newMessage: IMessage = {
       id: chatHistory.length + 1,
       messageType: true,
       message: values.message
     }
 
-    setChatHistory((prevHistory) => [...prevHistory, newMessage])
-    
-    console.log(values.message)
-
-    console.log(assistantChecked)
-
+    updateChatHistory(newMessage)
     messageForm.reset()
+
+    const assistantVar: IAssistant = assistants.find(x => x.name === assistantChecked);
+
+    const baseUrl: string | undefined = process.env.NEXT_PUBLIC_BASE_API_URL
+
+    const requestData: IRequestData = {
+      assistant: assistantVar,
+      message: newMessage,
+    }
+    
+    if (baseUrl) {
+      try {
+        const response = await axios.post(baseUrl, {requestData})
+
+        if (response.status === 200) {
+          updateChatHistory(response.data.data)
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Server response error."
+          })
+        }
+      }catch (e){
+        console.log(e)
+      }
+    }
   }
 
   return (

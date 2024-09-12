@@ -6,8 +6,8 @@ import {Toaster} from "@/components/ui/toaster";
 import { Montserrat } from 'next/font/google';
 
 const montserrat = Montserrat({
-  weight: ['100', '300', '400', '700', '900'],  // Define weights
-  subsets: ['latin'],  // Define subsets
+  weight: ['100', '300', '400', '700', '900'], 
+  subsets: ['latin'],
   variable: '--font-montserrat',
 });
 export const metadata: Metadata = {
