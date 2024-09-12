@@ -113,7 +113,7 @@ const Page = () => {
     updateChatHistory(newMessage)
     messageForm.reset()
 
-    const assistantVar: IAssistant = assistants.find(x => x.name === assistantChecked);
+    const assistantVar: IAssistant | any = assistants.find(x => x.name === assistantChecked);
 
     const baseUrl: string | undefined = process.env.NEXT_PUBLIC_BASE_API_URL
 
