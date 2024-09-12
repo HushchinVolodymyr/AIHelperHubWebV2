@@ -18,7 +18,7 @@ const Header = () => {
     <header className={'w-full bg-background'}>
       <div className={`${styles.headerContainer} h-16 px-6 md:w-3/5 w-full mx-auto`}>
         <aside className={`${styles.logoContainer} h-10`}>
-          <h1 className={'text-2xl font-bold'}>AiHelperHub</h1>
+          <Link href={'/'} className={'text-2xl font-bold'}>AiHelperHub</Link>
         </aside>
 
         <nav className={`${styles.navContainer} gap-4`}>
@@ -29,7 +29,7 @@ const Header = () => {
 
         <aside className={`${styles.asideContainer} gap-2`}>
           <Button className={`${styles.tryButton}  text-10`} variant='secondary' asChild>
-            <Link href='/'>Try <ArrowUpRight className={'h-10'}/></Link>
+            <Link href='/chat'>Try <ArrowUpRight className={'h-10'}/></Link>
           </Button>
 
           <ModeToggle/>

@@ -27,8 +27,9 @@ import firstFuncImg from '@/public/home-page/functions-section/1.jpg'
 import secondFuncImg from '@/public/home-page/functions-section/2.jpg'
 import thirdFuncImg from '@/public/home-page/functions-section/3.jpg'
 import fourthFuncImg from '@/public/home-page/functions-section/4.jpg'
-import fivthFuncImg from '@/public/home-page/functions-section/5.jpg'
+import fifthFuncImg from '@/public/home-page/functions-section/5.jpg'
 import sixthFuncImg from '@/public/home-page/functions-section/6.jpg'
+import Link from "next/link";
 
 const problems: ICardData[] = [
   {
@@ -75,7 +76,7 @@ const functions: ICardData[] = [
     description: "The system will automatically update the help desk knowledge base based on new data and feedback from customers."
   },
   {
-    img: fivthFuncImg,
+    img: fifthFuncImg,
     mainText: "Multichannel",
     description: "Your assistant can be connected to various communication channels such as your website, WhatsApp, Instagram and Telegram."
   },
@@ -100,8 +101,9 @@ const Home = () => {
           <p className={'text-xl md:text-2xl w-3/4 '}>Optimizing support work and improving communication with the
             client
             through the introduction of AI Assistant</p>
-          <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>Try<ArrowUpRight
-            className={'h-10'}/></Button>
+          <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>
+            <Link href={'/chat'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
+          </Button>
         </div>
       </section>
 
@@ -245,8 +247,9 @@ const Home = () => {
           Help desk automation using artificial intelligence promises to significantly improve operational efficiency
           and customer experience, which will be a key competitive advantage for your company.
         </p>
-        <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>Try<ArrowUpRight
-          className={'h-10'}/></Button>
+        <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>
+          <Link href={'/chat'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
+        </Button>
       </section>
     </main>
   );
