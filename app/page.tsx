@@ -203,13 +203,13 @@ const Home = () => {
         <div className={'flex flex-col gap-8 mt-10 max-w-full md:max-w-3/4'}>
           <div className={"flex justify-center gap-8 md:w-3/5 mx-auto"}>
             <Card className={"w-1/2 bg-secondary"}>
-              <CardContent className={"flex flex-col items-center"}>
+              <CardContent className={"flex flex-col items-center mt-4"}>
                 <Users className={"size-20"}/>
                 <h1 className={"text-xl font-semibold mt-4 sm:text-2xl"}>Reduced workload for employees</h1>
               </CardContent>
             </Card>
             <Card className={"w-1/2 bg-secondary"}>
-              <CardContent className={"flex flex-col items-center"}>
+              <CardContent className={"flex flex-col items-center mt-4"}>
                 <TimerReset className={"size-20"}/>
                 <h1 className={"text-xl font-semibold mt-4 sm:text-2xl"}>Reduced response time</h1>
               </CardContent>
@@ -218,13 +218,13 @@ const Home = () => {
 
           <div className={"flex justify-center gap-8 md:w-3/5 mx-auto"}>
             <Card className={"w-1/2 bg-secondary"}>
-              <CardContent className={"flex flex-col items-center"}>
+              <CardContent className={"flex flex-col items-center mt-4"}>
                 <ChartNetwork className={"size-20"}/>
                 <h1 className={"text-xl font-semibold mt-4 sm:text-2xl"}>Increased Efficiency and Accuracy</h1>
               </CardContent>
             </Card>
             <Card className={"w-1/2 bg-secondary"}>
-              <CardContent className={"flex flex-col items-center"}>
+              <CardContent className={"flex flex-col items-center mt-4"}>
                 <User className={"size-20"}/>
                 <h1 className={"text-xl font-semibold mt-4 sm:text-2xl"}>Increased customer satisfaction</h1>
               </CardContent>
@@ -233,7 +233,7 @@ const Home = () => {
 
           <div className={"flex justify-center gap-8 md:w-3/5 mx-auto"}>
             <Card className={"w-1/2 bg-secondary"}>
-              <CardContent className={"flex flex-col items-center"}>
+              <CardContent className={"flex flex-col items-center mt-4"}>
                 <HandCoins className={"size-20"}/>
                 <h1 className={"text-xl font-semibold mt-4 sm:text-2xl"}>Saving time and resources</h1>
               </CardContent>
