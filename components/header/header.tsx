@@ -24,7 +24,7 @@ const Header = () => {
         <nav className={`${styles.navContainer} gap-4`}>
           <Link href='/' className={'text-xl'}>Home</Link>
           <Link href='/' className={'text-xl'}>About</Link>
-          <Link href='tel:+380930860580' className={'text-xl'}>Contact</Link>
+          <a href='tel:+380930860580' className={'text-xl'}>Contact</a>
         </nav>
 
         <aside className={`${styles.asideContainer} gap-2 h-full `}>
