@@ -24,7 +24,7 @@ const Header = () => {
         <nav className={`${styles.navContainer} gap-4`}>
           <Link href='/' className={'text-xl'}>Home</Link>
           <Link href='/' className={'text-xl'}>About</Link>
-          <a href='tel:+380930860580' className={'text-xl'}>Contact</a>
+          <Link href='tel:+380930860580' className={'text-xl'}>Contact</Link>
         </nav>
 
         <aside className={`${styles.asideContainer} gap-2 h-full `}>
@@ -47,7 +47,7 @@ const Header = () => {
                   <SheetDescription className={'flex flex-col'}>
                     <Link href='/' className={'text-2xl '}>Home</Link>
                     <Link href='/' className={'text-2xl'}>About</Link>
-                    <Link href='/' className={'text-2xl'}>Contact</Link>
+                    <Link href='tel:+380930860580' className={'text-2xl'}>Contact</Link>
                   </SheetDescription>
                 </SheetHeader>
               </SheetContent>
