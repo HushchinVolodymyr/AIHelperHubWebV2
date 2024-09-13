@@ -127,7 +127,7 @@ const Page = () => {
 
     if (baseUrl) {
       try {
-        const response = await axios.post(baseUrl, {requestData})
+        const response = await axios.post(baseUrl, requestData)
 
         if (response.status === 200) {
           updateChatHistory(response.data.data)
