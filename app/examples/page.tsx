@@ -11,6 +11,7 @@ import {ArrowUpRight} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
 
+
 const assistants: IAssistant[] = [
   {
     id: 1,
