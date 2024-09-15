@@ -103,7 +103,7 @@ const Home = () => {
             client
             through the introduction of AI Assistant</p>
           <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>
-            <Link href={'/chat'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
+            <Link href={'/chat/'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
           </Button>
         </div>
       </section>
