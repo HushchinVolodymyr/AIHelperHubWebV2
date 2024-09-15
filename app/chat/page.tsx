@@ -24,6 +24,7 @@ import {
 import {toast} from "@/hooks/use-toast";
 import {IRequestData} from "@/interfaces/iRequestData";
 import axios from "axios";
+import {Skeleton} from "@/components/ui/skeleton";
 
 // const messages: IMessage[] = [
 //   {
@@ -59,15 +60,49 @@ import axios from "axios";
 const assistants: IAssistant[] = [
   {
     id: 1,
-    name: "DBN assistant"
+    name: "DBN assistant",
+    description: "State Building Standards of Ukraine\n" +
+      "\n" +
+      "Explore the comprehensive State Building Norms of Ukraine focusing on the engineering protection of territories, buildings, and structures from landslides and collapses. The norms cover essential requirements for engineering surveys, assessment of environmental impact, seismic influences on slopes, and scientific-technical support throughout the life cycle of engineering protection structures.\n" +
+      "\n" +
+      "These standards are mandatory for the development of project documentation for new construction, reconstruction, major repairs, and technical re-equipment of engineering protection structures, harmonized with existing regulatory documents regarding terms and definitions.\n" +
+      "\n" +
+      "Delve into the detailed requirements and criteria outlined in the State Building Standards of Ukraine concerning the construction and engineering protection of territories, buildings, and structures against landslides and collapses."
   },
   {
     id: 2,
-    name: "General knowledge DEMO assistant"
+    name: "General knowledge DEMO assistant",
+    description: "Creating a Facebook Page:\n" +
+      "\n" +
+      "Are you looking to establish a presence on Facebook for your business, brand, or organization? Follow these simple steps to create your own Facebook Page:\n" +
+      "\n" +
+      "Visit the link provided by Facebook to access the \"Create A Page\" page.\n" +
+      "Select the type of page you want to create (e.g., business).\n" +
+      "Enter essential information about your business, including the name, category, contact details, and address.\n" +
+      "Upload a profile picture and cover images that represent your business effectively.\n" +
+      "Choose a username (vanity URL) for your page.\n" +
+      "Add more details about your business to provide visitors with key information.\n" +
+      "Remember, creating a Facebook Page involves planning and attention to detail. Make sure to utilize high-quality images and provide comprehensive information to engage your audience effectively."
   },
   {
     id: 3,
-    name: "HelpDesk_assistant"
+    name: "HelpDesk_assistant",
+    description: "Position Profile Overview:\n" +
+      "\n" +
+      "Our organization offers a diverse range of positions across multiple hardware sets, reflecting a comprehensive set of roles in the technology and development fields.\n" +
+      "\n" +
+      "Key Highlights:\n" +
+      "\n" +
+      "Delivery Management: From Delivery Directors to Delivery Managers, our teams are led by experienced professionals ensuring successful project outcomes.\n" +
+      "Software Development: With dedicated managers and directors overseeing development processes, we ensure high-quality software solutions.\n" +
+      "Technical Expertise: Technical Program Managers, Architects, and Leads bring advanced skills to the table for innovative solutions.\n" +
+      "Specialized Roles: From SEO specialists to Business Analysts and Product Managers, we have dedicated experts in various domains.\n" +
+      "Frontend Development: Expertise in Angular, React, Vue.JS, and more, ensuring cutting-edge frontend solutions.\n" +
+      "Technology Stack: Proficiency in a wide range of technologies including PHP, Java, Scala, Big Data, Microsoft Stack, .Net, C#, Python, and more.\n" +
+      "Mobile Development: Covering iOS and Android development, including specialized roles like Data Analysts, DBAs, and QA professionals.\n" +
+      "Design and Creativity: From Game Designers to UX/UI Designers, our creative teams ensure visually appealing and user-friendly experiences.\n" +
+      "Media and Graphics: Offering roles such as 2D/3D Artists, Animators, Motion Designers, and Videographers for diverse multimedia projects.\n" +
+      "Explore our positions across various hardware sets to find the perfect fit for your skills and expertise."
   }
 ]
 
@@ -85,6 +120,7 @@ const Page = () => {
 
   const [chatHistory, setChatHistory] = useState<IMessage[]>([])
   const [assistantChecked, setAssistantChecked] = useState<string>(assistants[0].name)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const chatEndRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -107,6 +143,8 @@ const Page = () => {
     const updateChatHistory = (message: IMessage) => {
       setChatHistory(prevHistory => [...prevHistory, message]);
     }
+    
+    setIsLoading(true)
 
     const newMessage: IMessage = {
       id: chatHistory.length + 1,
@@ -118,7 +156,7 @@ const Page = () => {
     messageForm.reset()
 
     const baseUrl: string | undefined = process.env.NEXT_PUBLIC_BASE_API_URL
-    
+
     const requestData: IRequestData = {
       assistant: assistantChecked,
       message: newMessage,
@@ -130,6 +168,7 @@ const Page = () => {
         const response = await axios.post(baseUrl, requestData)
 
         if (response.status === 200) {
+          setIsLoading(false)
           updateChatHistory(response.data.data)
         } else {
           toast({
@@ -149,8 +188,8 @@ const Page = () => {
   };
 
   return (
-    <main className={'flex flex-col justify-end h-[92vh] w-full sm:w-3/4 overflow-hidden'}>
-      <ScrollArea className={'flex flex-col justify-end h-full w-full sm:w-3/4 mx-auto'}>
+    <main className={'flex flex-col justify-end h-screen w-full sm:w-3/4 overflow-hidden'}>
+      <ScrollArea className={'flex flex-col mt-[7vh] justify-end h-full w-full sm:w-3/4 mx-auto'}>
         <div className={"p-1/2 sm:p-4 flex flex-col justify-end w-full min-h-full sm:w-full mx-auto self-end"}>
           {chatHistory.map((message) => (
             <div key={message.id}
@@ -166,6 +205,12 @@ const Page = () => {
               </div>
             </div>
           ))}
+          {isLoading ? (
+            <div className={"flex items-center h-8 my-1 sm:my-2 p-1 m-2 sm:p-4 rounded-2xl"}>
+              <BotMessageSquare className={'size-8 w-14'}/>
+              <Skeleton className={"w-36 h-4"}/>
+            </div>
+          ) : null }
           <div ref={chatEndRef}/>
         </div>
       </ScrollArea>

@@ -90,7 +90,7 @@ const functions: ICardData[] = [
 
 const Home = () => {
   return (
-    <main className={`${styles.homePageContainer} `}>
+    <main className={`${styles.homePageContainer} mt-[7vh]`}>
       <section className={`${styles.bannerSection} h-96 overflow-hidden`}>
         <Image className={`${styles.bannerImg}  h-full object-cover`}
                src={homePageBanner} alt="home-page-banner" loading='lazy' placeholder="blur" unoptimized={true}/>

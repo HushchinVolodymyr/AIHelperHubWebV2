@@ -15,7 +15,7 @@ import {
 
 const Header = () => {
   return (
-    <header className={'w-full bg-background h-[8vh] sm:h-16'}>
+    <header className={'absolute z-50 top-0 w-full bg-background h-[8vh] sm:h-16'}>
       <div className={`${styles.headerContainer} px-6 md:w-3/5 w-full h-full mx-auto`}>
         <aside className={`${styles.logoContainer} h-10`}>
           <Link href={'/'} className={'text-3xl xm:text-2xl font-bold'}>AiHelperHub</Link>
@@ -23,7 +23,7 @@ const Header = () => {
 
         <nav className={`${styles.navContainer} gap-4`}>
           <Link href='/' className={'text-xl'}>Home</Link>
-          <Link href='/' className={'text-xl'}>About</Link>
+          <Link href='/examples' className={'text-xl'}>Examples</Link>
           <Link href='tel:+380930860580' className={'text-xl'}>Contact</Link>
         </nav>
 
@@ -46,7 +46,7 @@ const Header = () => {
                   <SheetTitle className={'text-3xl'}>AiHelperHub</SheetTitle>
                   <SheetDescription className={'flex flex-col'}>
                     <Link href='/' className={'text-2xl '}>Home</Link>
-                    <Link href='/' className={'text-2xl'}>About</Link>
+                    <Link href='/examples' className={'text-2xl'}>Examples</Link>
                     <Link href='tel:+380930860580' className={'text-2xl'}>Contact</Link>
                   </SheetDescription>
                 </SheetHeader>
