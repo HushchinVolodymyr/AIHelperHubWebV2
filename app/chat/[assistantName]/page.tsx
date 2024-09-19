@@ -76,7 +76,7 @@ export default function Page({params}: {params: {assistantName: string}}) {
           break
         case "HelpDesk_assistant":
           setAssistantChecked(assistants[2].name);
-          setSelectedAssistant(assistants[1]);
+          setSelectedAssistant(assistants[2]);
           break
         default:
           setAssistantChecked(assistants[0].name);
