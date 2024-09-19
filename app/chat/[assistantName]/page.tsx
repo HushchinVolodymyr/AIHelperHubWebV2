@@ -58,7 +58,7 @@ export default function Page({params}: {params: {assistantName: string}}) {
 
   const [chatHistory, setChatHistory] = useState<IMessage[]>([])
   const [assistantChecked, setAssistantChecked] = useState<string>(params.assistantName || assistants[0].name)
-  const [selectedAssistant, setSelectedAssistant] = useState<IAssistant>([])
+  const [selectedAssistant, setSelectedAssistant] = useState<IAssistant>(assistants[0])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const chatEndRef = useRef<HTMLDivElement | null>(null)
   
