@@ -58,20 +58,25 @@ export default function Page({params}: {params: {assistantName: string}}) {
 
   const [chatHistory, setChatHistory] = useState<IMessage[]>([])
   const [assistantChecked, setAssistantChecked] = useState<string>(params.assistantName || assistants[0].name)
+  const [selectedAssistant, setSelectedAssistant] = useState<IAssistant>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const chatEndRef = useRef<HTMLDivElement | null>(null)
+  
   
   useEffect(() => {    
     if (params.assistantName) {
       switch (params.assistantName){
         case "DBN_assistant":
           setAssistantChecked(assistants[0].name);
+          setSelectedAssistant(assistants[0]);
           break
         case "General_knowledge_DEMO_assistant":
           setAssistantChecked(assistants[1].name);
+          setSelectedAssistant(assistants[1]);
           break
         case "HelpDesk_assistant":
           setAssistantChecked(assistants[2].name);
+          setSelectedAssistant(assistants[1]);
           break
         default:
           setAssistantChecked(assistants[0].name);
@@ -147,31 +152,37 @@ export default function Page({params}: {params: {assistantName: string}}) {
 
   return (
     <main className={'flex flex-col justify-end h-screen w-full sm:w-3/4 overflow-hidden'}>
-      <ScrollArea className={'flex flex-col mt-[7vh] justify-end h-full w-full sm:w-3/4 mx-auto'}>
-        <div className={"p-1/2 sm:p-4 flex flex-col justify-end w-full min-h-full sm:w-full mx-auto self-end"}>
-          {chatHistory.map((message) => (
-            <div key={message.id}
-                 className={`h-full my-1 sm:my-2 p-2 flex flex-col m-2 rounded-2xl + ${message.messageType ?
-                   "bg-secondary p-2 sm:p-3 sm:px-4 text-end self-end justify-end"
-                   :
-                   "bg-background sm:p-4"}`}
-            >
-              <div className={'flex'}>
-                {!message.messageType ? <BotMessageSquare className={'size-8 w-12'}/> : null}
-                <p className={"text-l xm:text-xl w-full"}
-                   dangerouslySetInnerHTML={{__html: formatText(message.message)}}/>
+      {chatHistory.length === 0 ? (
+        <section className={"w-2/3 flex flex-col gap-10 items-center justify-center mx-auto my-auto"}>
+          <h1 className={"text-4xl text-center text-secondary text-gray-600 font-bold"}>{selectedAssistant.name}</h1>
+          <p className={"text-l text-center text-gray-600 font-semibold"}>{selectedAssistant.description}</p>
+        </section> ) : (
+        <ScrollArea className={'flex flex-col mt-[7vh] justify-end h-full w-full sm:w-3/4 mx-auto'}>
+          <div className={"p-1/2 sm:p-4 flex flex-col justify-end w-full min-h-full sm:w-full mx-auto self-end"}>
+            {chatHistory.map((message) => (
+              <div key={message.id}
+                   className={`h-full my-1 sm:my-2 p-2 flex flex-col m-2 rounded-2xl + ${message.messageType ?
+                     "bg-secondary p-2 sm:p-3 sm:px-4 text-end self-end justify-end"
+                     :
+                     "bg-background sm:p-4"}`}
+              >
+                <div className={'flex'}>
+                  {!message.messageType ? <BotMessageSquare className={'size-8 w-12'}/> : null}
+                  <p className={"text-l xm:text-xl w-full"}
+                     dangerouslySetInnerHTML={{__html: formatText(message.message)}}/>
+                </div>
               </div>
-            </div>
-          ))}
-          {isLoading ? (
-            <div className={"flex items-center h-8 my-1 sm:my-2 p-1 m-2 sm:p-4 rounded-2xl"}>
-              <BotMessageSquare className={'size-8 w-14'}/>
-              <Skeleton className={"w-36 h-4"}/>
-            </div>
-          ) : null }
-          <div ref={chatEndRef}/>
-        </div>
-      </ScrollArea>
+            ))}
+            {isLoading ? (
+              <div className={"flex items-center h-8 my-1 sm:my-2 p-1 m-2 sm:p-4 rounded-2xl"}>
+                <BotMessageSquare className={'size-8 w-14'}/>
+                <Skeleton className={"w-36 h-4"}/>
+              </div>
+            ) : null }
+            <div ref={chatEndRef}/>
+          </div>
+        </ScrollArea>
+      )}
 
       <section className={"flex gap-2 w-full sm:w-3/4 p-2 mx-auto"}>
         <DropdownMenu>
@@ -181,7 +192,7 @@ export default function Page({params}: {params: {assistantName: string}}) {
               setAssistantChecked
             }>
               {assistants.map(assistant => (
-                <DropdownMenuRadioItem key={assistant.id} value={assistant.name}>
+                <DropdownMenuRadioItem key={assistant.id} value={assistant.name} onClick={() => {setSelectedAssistant(assistant)}}>
                   {assistant.name}
                 </DropdownMenuRadioItem>
               ))}
