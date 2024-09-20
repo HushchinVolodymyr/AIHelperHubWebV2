@@ -1,9 +1,10 @@
 ﻿import React from 'react';
+import styles from './footer.module.scss'
 
 const Footer = () => {
   return (
-    <footer className="p-6 mx-auto">
-      <h1 className={"text-sm text-slate-700"}>Some useful maybe information</h1>
+    <footer className={styles.footerContainer}>
+      <h1 className={styles.footerText}>Some useful maybe information</h1>
     </footer>
   );
 };

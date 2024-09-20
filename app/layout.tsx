@@ -4,6 +4,7 @@ import {ThemeProvider} from "@/components/theme-provider";
 import Header from "@/components/header/header";
 import {Toaster} from "@/components/ui/toaster";
 import { Montserrat } from 'next/font/google';
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const montserrat = Montserrat({
   weight: ['100', '300', '400', '700', '900'], 
@@ -22,6 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <GoogleAnalytics/>
       <body
         className={`${montserrat.variable} antialiased`}
       >
