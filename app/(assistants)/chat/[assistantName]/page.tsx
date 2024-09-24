@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {toast} from "@/hooks/use-toast";
-import {IRequestData} from "@/interfaces/iRequestData";
+import {IRequestData} from "@/DTOs/iRequestData";
 import axios from "axios";
 import {Skeleton} from "@/components/ui/skeleton";
 

@@ -1,54 +1,124 @@
-﻿.headerContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  
-  .logoContainer {
-    display: flex;
-    align-items: center;
-  }
-  
-  .navContainer {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .asideContainer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    
-    .sheetContainer {
-      display: none;
-    }
-    
-  }
-}
+﻿.header {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  width: 100%;
+  @apply bg-background;
+  height: 4rem;
 
-@media screen and (max-width: 1024px) {
   .headerContainer {
-    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 100%;
+    width: 75%;
+    margin: 0 auto;
+
+
+    .logoContainer {
+      display: flex;
+      align-items: center;
+      height: 4rem;
+      width: 10rem;
+
+      .logoLink {
+        font-size: 30px;
+        line-height: 34px;
+        font-weight: 700;
+      }
+    }
+
+    .navContainer {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+
+      .navLink {
+        font-size: 20px;
+        line-height: 28px;
+      }
+    }
+
     .asideContainer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      height: 100%;
+      width: 10rem;
+
+
+      .userDropDownTrigger {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 20px;
+        line-height: 24px;
+      }
       
-      .tryButton {
+      .userDropDownContent{
+       
+       
+        .userDropDownItem {
+          
+          .dropDownItemText {
+            font-size: 20px;
+          }
+        }
+        
+        .userDropDownSeparator{
+        
+        }
+        
+      }
+      
+
+      .toggleContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+
+      .sheetContainer {
         display: none;
       }
     }
   }
 }
 
+@media screen and (max-width: 1023px) {
+  .header {
+    .headerContainer {
+      width: 100%;
 
-@media screen and (max-width: 435px) {
-  .headerContainer {
-    
-    .navContainer {
-      display: none;
+      .logoContainer {
+        width: auto;
+      }
+
+      .asideContainer {
+        width: auto;
+
+        .tryButton {
+          display: none;
+        }
+      }
     }
-    
-    .asideContainer {
-      
-      .sheetContainer{
-        display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .header {
+    .headerContainer {
+      .navContainer {
+        display: none;
+      }
+
+      .asideContainer {
+        .sheetContainer {
+          display: block;
+        }
       }
     }
   }

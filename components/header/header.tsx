@@ -1,9 +1,10 @@
-﻿import React from 'react';
+﻿"use client"
+import React, {useEffect, useState} from 'react';
 import styles from './header.module.scss'
 import {ModeToggle} from "@/components/theme-toggle";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import {Menu, ArrowUpRight} from "lucide-react";
+import {ChevronDown, Menu} from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -12,31 +13,91 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import IUser from "@/interfaces/iUser";
+import {redirect, usePathname} from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import {Separator} from "@/components/ui/separator";
+import {logout} from "@/services/auth";
+
 
 const Header = () => {
+  const [user, setUser] = useState<IUser | null>(null)
+  const pathname = usePathname();
+  const [ shouldRedirect, setShouldRedirect] = useState<boolean>(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
+    }
+  }, [pathname]);
+  
+  const handleLogout = async () => {
+    await logout()
+    setUser(null);
+    setShouldRedirect(true)
+  }
+
+  useEffect(() => {
+    if (shouldRedirect) {
+      redirect("/login");
+    }
+  }, [shouldRedirect]);
+  
   return (
-    <header className={'absolute z-50 top-0 w-full bg-background h-[8vh] sm:h-16'}>
-      <div className={`${styles.headerContainer} px-6 md:w-3/5 w-full h-full mx-auto`}>
-        <aside className={`${styles.logoContainer} h-10`}>
-          <Link href={'/'} className={'text-3xl xm:text-2xl font-bold'}>AiHelperHub</Link>
+    <header className={`${styles.header}`}>
+      <div className={`${styles.headerContainer}`}>
+        <aside className={`${styles.logoContainer}`}>
+          <Link href={'/'} className={`${styles.logoLink}`}>AiHelperHub</Link>
         </aside>
 
-        <nav className={`${styles.navContainer} gap-4`}>
-          <Link href='/' className={'text-xl'}>Home</Link>
-          <Link href='/examples' className={'text-xl'}>Examples</Link>
-          <Link href='tel:+380930860580' className={'text-xl'}>Contact</Link>
+        <nav className={`${styles.navContainer}`}>
+          <Link href='/' className={`${styles.navLink}`}>Home</Link>
+          <Link href='/examples' className={`${styles.navLink}`}>Examples</Link>
+          <Link href='tel:+380930860580' className={`${styles.navLink}`}>Contact</Link>
         </nav>
 
-        <aside className={`${styles.asideContainer} gap-2 h-full `}>
-          <Button className={`${styles.tryButton}  text-10`} variant='secondary' asChild>
-            <Link href='/chat'>Try <ArrowUpRight className={'h-10'}/></Link>
-          </Button>
-
-          <div className={"flex items-center justify-center h-full"}> 
+        <aside className={`${styles.asideContainer}`}>
+          {!user ?
+            <Button className={`${styles.tryButton}`} variant='secondary' asChild>
+              <Link href='/login'>Login</Link>
+            </Button> : null
+          }
+          <div className={`${styles.toggleContainer}`}>
             <ModeToggle/>
           </div>
 
-          <div className={`${styles.sheetContainer} `}>
+          {user ?
+            <DropdownMenu>
+              <DropdownMenuTrigger className={styles.userDropDownTrigger}>
+                {user.username}
+                <ChevronDown/>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className={"mt-2 mr-4"}>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem className={styles.userDropDownItem}>
+                    <Link href={"/profile"} className={"text-xl"}>Profile</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuGroup >
+                <Separator className={"my-1"}></Separator>
+                </DropdownMenuGroup>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem className={styles.userDropDownItem}>
+                    <button className={"text-xl"} onClick={handleLogout}>Logout</button>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu> : null
+          }
+
+          <div className={`${styles.sheetContainer}`}>
             <Sheet>
               <SheetTrigger className={"flex items-center justify-center h-full"}>
                 <Menu className={'flex align-center justify-center scale-120 my-auto size-8'}/>
