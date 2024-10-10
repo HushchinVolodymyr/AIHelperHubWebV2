@@ -1,6 +1,6 @@
 ﻿"use client"
-import React, {useEffect, useState} from 'react';
-import styles from './header.module.scss'
+import React from 'react';
+import styles from './header.module.scss';
 import {ModeToggle} from "@/components/theme-toggle";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
@@ -13,43 +13,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import IUser from "@/interfaces/iUser";
-import {redirect, usePathname} from "next/navigation";
+// import IUser from "@/interfaces/iUser";
+// import {redirect, usePathname} from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Separator} from "@/components/ui/separator";
-import {logout} from "@/services/auth";
-
+import { useAuth } from '@/services/auth'
 
 const Header = () => {
-  const [user, setUser] = useState<IUser | null>(null)
-  const pathname = usePathname();
-  const [ shouldRedirect, setShouldRedirect] = useState<boolean>(false);
+  const { user, logout } = useAuth()
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      setUser(null);
-    }
-  }, [pathname]);
-  
-  const handleLogout = async () => {
-    await logout()
-    setUser(null);
-    setShouldRedirect(true)
-  }
-
-  useEffect(() => {
-    if (shouldRedirect) {
-      redirect("/login");
-    }
-  }, [shouldRedirect]);
-  
   return (
     <header className={`${styles.header}`}>
       <div className={`${styles.headerContainer}`}>
@@ -64,7 +40,7 @@ const Header = () => {
         </nav>
 
         <aside className={`${styles.asideContainer}`}>
-          {!user ?
+          {!user.isAuthenticated  ?
             <Button className={`${styles.tryButton}`} variant='secondary' asChild>
               <Link href='/login'>Login</Link>
             </Button> : null
@@ -73,28 +49,34 @@ const Header = () => {
             <ModeToggle/>
           </div>
 
-          {user ?
-            <DropdownMenu>
-              <DropdownMenuTrigger className={styles.userDropDownTrigger}>
-                {user.username}
-                <ChevronDown/>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className={"mt-2 mr-4"}>
-                <DropdownMenuGroup>
-                  <DropdownMenuItem className={styles.userDropDownItem}>
-                    <Link href={"/profile"} className={"text-xl"}>Profile</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuGroup >
-                <Separator className={"my-1"}></Separator>
-                </DropdownMenuGroup>
-                <DropdownMenuGroup>
-                  <DropdownMenuItem className={styles.userDropDownItem}>
-                    <button className={"text-xl"} onClick={handleLogout}>Logout</button>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu> : null
+          {user.isAuthenticated ?
+            <div>
+              <DropdownMenu>
+                <DropdownMenuTrigger className={styles.userDropDownTrigger}>
+                  <div className={styles.userDropDowmData}>
+                    <h1 className={styles.usernameData}>{user.username}</h1>
+                    <p className={styles.emailData}>{user.email}</p>
+                  </div>
+                  <ChevronDown/>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className={"mt-2 mr-4"}>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem className={styles.userDropDownItem}>
+                      <Link href={"/profile"} className={"text-xl"}>Profile</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuGroup>
+                    <Separator className={"my-1"}></Separator>
+                  </DropdownMenuGroup>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem className={styles.userDropDownItem}>
+                      <button className={"text-xl"} onClick={logout}>Logout</button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div> : null
+
           }
 
           <div className={`${styles.sheetContainer}`}>

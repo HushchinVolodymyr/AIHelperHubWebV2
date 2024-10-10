@@ -121,14 +121,14 @@ export default function Page({params}: {params: {assistantName: string}}) {
     const baseUrl: string | undefined = process.env.NEXT_PUBLIC_BASE_API_URL
 
     const requestData: IRequestData = {
-      assistant: assistantChecked,
+      assistant: selectedAssistant,
       message: newMessage,
     }
 
 
     if (baseUrl) {
       try {
-        const response = await axios.post(baseUrl, requestData)
+        const response = await axios.post(`${baseUrl}/api/assistant/response`, requestData)
 
         if (response.status === 200) {
           setIsLoading(false)

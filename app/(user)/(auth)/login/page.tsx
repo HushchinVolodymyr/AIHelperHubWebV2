@@ -21,10 +21,10 @@ import {useForm} from "react-hook-form";
 import {toast} from "@/hooks/use-toast";
 import ILoginDto from "@/DTOs/iLoginDto";
 import Link from "next/link";
-import {login as loginUser} from "@/services/auth";
 import {useRouter} from "next/navigation";
-import {useAuth} from "@/hooks/use-auth";
+import {useAuth} from "@/services/auth";
 
+// Login form schema (username, password)
 const loginFormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters long",
@@ -36,9 +36,13 @@ const loginFormSchema = z.object({
   }),
 })
 
+// Login page function
 export default function Page() {
   const router = useRouter()
+  // Authentication login hook 
+  const { login } = useAuth();
   
+  // Login form base text
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -46,8 +50,10 @@ export default function Page() {
       password: "",
     }
   });
-
+  
+  // Login submit
   async function submitLogin(values: z.infer<typeof loginFormSchema>) {
+    // Check for empty inputs
     if (values.username.trim() === "" || values.password.trim() === "") {
       toast({
         variant: "destructive",
@@ -57,19 +63,23 @@ export default function Page() {
       return
     }
 
+    // Login data object
     const LoginDto: ILoginDto = {
       username: values.username,
       password: values.password
     }
 
     try {
-      const response = await loginUser(LoginDto)
-      
+      //Request to server (POST method)
+      const response = await login(LoginDto)
+
+      // Redirect if to home page if status code 201
       if (response && response.status === 200){
         router.push("/");
       }
 
     } catch (error){
+      // Log errors
       console.log(error)
     }
   }

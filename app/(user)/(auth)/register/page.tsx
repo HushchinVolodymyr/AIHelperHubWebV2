@@ -21,9 +21,10 @@ import {useForm} from "react-hook-form";
 import {toast} from "@/hooks/use-toast";
 import IRegisterDto from "@/DTOs/IRegisterDto";
 import Link from "next/link";
-import {register as registerUser} from '@/services/auth'
 import {useRouter} from 'next/navigation'
+import {useAuth} from "@/services/auth";
 
+// Register form schema (username, email, password, confirm password)
 const registerFormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters long",
@@ -41,8 +42,13 @@ const registerFormSchema = z.object({
   }),
 });
 
+// Register page function
 export default function Page() {
   const router = useRouter()
+  // Authentication register hook 
+  const { register } = useAuth();
+  
+  // Register form base text
   const registerForm = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -52,8 +58,10 @@ export default function Page() {
       confirmPassword: "",
     }
   });
-
+  
+  // Register submit
   async function submitRegister(values: z.infer<typeof registerFormSchema>) {
+    // Check for empty inputs
     if (values.username.trim() === "" || values.email.trim() === "" || values.password.trim() === "" || values.confirmPassword.trim() === "") {
       toast({
         variant: "destructive",
@@ -63,6 +71,7 @@ export default function Page() {
       return;
     }
     
+    // Check that password and confirm password the same
     if (values.password !== values.confirmPassword){
       toast({
         variant: "destructive",
@@ -71,6 +80,7 @@ export default function Page() {
       return;
     }
     
+    // Register data object
     const registerDto: IRegisterDto = {
       username: values.username,
       email: values.email,
@@ -78,13 +88,16 @@ export default function Page() {
     };
     
     try {
-      const response = await registerUser(registerDto)
+      //Request to server (POST method)
+      const response = await register(registerDto)
       
+      // Redirect if to home page if status code 201
       if (response && response.status === 201){
         router.push("/");
       }
       
     } catch (error){
+      // Log errors
       console.log(error)
     }
   }

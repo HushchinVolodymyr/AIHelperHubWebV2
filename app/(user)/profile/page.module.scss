@@ -1,0 +1,40 @@
+﻿.pageContainer {
+    height: 100vh;
+    padding-top: 4rem;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    
+    
+    
+    .asideMenu{
+        width: 64px;
+        height: 98%;
+        border-radius: 10px;
+        margin: .5rem .5rem;
+        display: flex;
+        padding-top: 3px;
+        flex-direction: column;
+        align-items: center;
+        
+        
+        .option {
+            width: 58px;
+            height: 58px;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .optionIcon {
+                scale: 1.5;
+            }
+        }
+
+        .optionSelected {
+            width: 60px;
+            height: 60px;
+        
+        }
+    }
+}
