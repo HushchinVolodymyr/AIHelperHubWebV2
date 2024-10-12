@@ -1,6 +1,7 @@
 ﻿import axios, { AxiosResponse } from 'axios';
 import IRegisterDto from "../DTOs/IRegisterDto";
 import { toast } from "@/hooks/use-toast";
+import { redirect } from "next/navigation";
 import ILoginDto from "@/DTOs/iLoginDto";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
@@ -17,11 +18,7 @@ export const useAuth = () => {
             const response: AxiosResponse = await axios.post(`${API_URL}/api/register`, registerDto, { withCredentials: true });
 
             if (response.status === 201) {
-                toast({
-                    variant: 'default',
-                    title: "Success",
-                    description: "User successfully registered",
-                });
+                toast({variant: 'default', title: "Success", description: "User successfully registered",});
 
                 sessionStorage.setItem("token", response.data.token);
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
@@ -36,20 +33,12 @@ export const useAuth = () => {
             }
 
             if (response.status === 400) {
-                toast({
-                    variant: 'destructive',
-                    title: "Error",
-                    description: response.data.data.message
-                });
+                toast({variant: 'destructive', title: "Error", description: response.data.data.message});
                 return response;
             }
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
-                toast({
-                    variant: 'destructive',
-                    description: error.response.data.error || 'Error occurred in registration!',
-                });
-                console.error(error.response.data);
+                toast({variant: 'destructive',description: error.response.data.error || 'Error occurred in registration!',});
             } else {
                 console.error('Error:', error);
             }
@@ -61,11 +50,7 @@ export const useAuth = () => {
             const response = await axios.post(`${API_URL}/api/login`, loginDto, { withCredentials: true });
 
             if (response.status === 200) {
-                toast({
-                    variant: 'default',
-                    title: "Success",
-                    description: "User successfully logged in",
-                });
+                toast({variant: 'default', title: "Success", description: "User successfully logged in",});
 
                 sessionStorage.setItem("token", response.data.token);
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
@@ -80,11 +65,7 @@ export const useAuth = () => {
             return response;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                toast({
-                    variant: 'destructive',
-                    description: error.response?.data.error || 'Login error!',
-                });
-                console.error('Error during login request:', error.response?.data || error.message);
+                toast({variant: 'destructive', description: error.response?.data.error || 'Login error!',});
             } else {
                 console.error('Unexpected error during login:', error);
             }
@@ -108,18 +89,11 @@ export const useAuth = () => {
                 
                 dispatch(logoutAction());
 
-                toast({
-                    variant: 'default',
-                    title: "Success",
-                    description: "You logged out!"
-                });
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Error",
-                    description: response.data.data.message
-                });
-            }
+                toast({variant: 'default', title: "Success", description: "You logged out!"});
+                redirect("/")
+            } 
+            else toast({variant: "destructive", title: "Error", description: response.data.data.message})
+            
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.error('Error during logout request:', error.response?.data || error.message);

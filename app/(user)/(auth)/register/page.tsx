@@ -22,7 +22,7 @@ import {toast} from "@/hooks/use-toast";
 import IRegisterDto from "@/DTOs/IRegisterDto";
 import Link from "next/link";
 import {useRouter} from 'next/navigation'
-import {useAuth} from "@/services/auth";
+import {useAuth} from "@/hooks/use-auth";
 
 // Register form schema (username, email, password, confirm password)
 const registerFormSchema = z.object({

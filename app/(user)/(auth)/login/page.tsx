@@ -22,18 +22,15 @@ import {toast} from "@/hooks/use-toast";
 import ILoginDto from "@/DTOs/iLoginDto";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
-import {useAuth} from "@/services/auth";
+import {useAuth} from "@/hooks/use-auth";
 
 // Login form schema (username, password)
 const loginFormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters long",
-  }).max(30, {
-    message: "Username must be no more than 30 characters long",
-  }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters long",
-  }),
+  username: z.string()
+    .min(2, {message: "Username must be at least 2 characters long",})
+    .max(30, {message: "Username must be no more than 30 characters long",}),
+  password: z.string()
+    .min(8, {message: "Password must be at least 8 characters long",}),
 })
 
 // Login page function

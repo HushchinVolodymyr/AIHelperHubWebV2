@@ -1,8 +1,7 @@
 ﻿"use client";
 import React, { useEffect, useState } from 'react';
 import IUser from "@/interfaces/iUser";
-import { redirect } from "next/navigation";
-import { getUser } from "@/services/userService";
+import { getUser } from "@/services/user-service";
 import styles from "./page.module.scss"
 import {BadgePlus, BotMessageSquare, UserPen} from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -15,9 +14,6 @@ const Page = () => {
   const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    if (!token) redirect("/login");
-
     const fetchUser = async () => {
       const user = await getUser();
       setUser(user)
@@ -32,7 +28,7 @@ const Page = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <Tabs defaultValue="profile" className="mt-4 w-screen flex flex-col items-center ">
+      <Tabs defaultValue="create_assistant" className="mt-4 w-screen flex flex-col items-center">
         <TabsList>
           <TabsTrigger value="profile" className={'flex gap-2'}>
             <UserPen/>

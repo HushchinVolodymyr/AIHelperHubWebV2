@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Separator} from "@/components/ui/separator";
-import { useAuth } from '@/services/auth'
+import { useAuth } from '@/hooks/use-auth'
 
 const Header = () => {
   const { user, logout } = useAuth()
@@ -62,7 +62,7 @@ const Header = () => {
                 <DropdownMenuContent className={"mt-2 mr-4"}>
                   <DropdownMenuGroup>
                     <DropdownMenuItem className={styles.userDropDownItem}>
-                      <Link href={"/profile"} className={"text-xl"}>Profile</Link>
+                      <Link href={"/profile"} className={"text-xl w-full"}>Profile</Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuGroup>
@@ -70,7 +70,7 @@ const Header = () => {
                   </DropdownMenuGroup>
                   <DropdownMenuGroup>
                     <DropdownMenuItem className={styles.userDropDownItem}>
-                      <button className={"text-xl"} onClick={logout}>Logout</button>
+                      <button className={"text-xl w-full text-start"} onClick={logout}>Logout</button>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
