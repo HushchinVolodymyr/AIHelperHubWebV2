@@ -24,7 +24,6 @@ import { Separator } from "@/components/ui/separator";
 import { useAuth } from '@/hooks/use-auth'
 import { getUser } from "@/services/user-service";
 import { useRouter } from 'next/navigation';
-import { toast } from '@/hooks/use-toast';
 
 const Header = () => {
   const { user, logout } = useAuth()
@@ -43,7 +42,7 @@ const Header = () => {
     }
 
     fetchUser();
-  }, []);
+  }, [user]);
 
   // logout action for button
   const logoutAction = async () => {
