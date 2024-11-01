@@ -93,7 +93,7 @@ const Home = () => {
     <main className={`${styles.homePageContainer} mt-[7vh]`}>
       <section className={`${styles.bannerSection} h-96 overflow-hidden`}>
         <Image className={`${styles.bannerImg}  h-full object-cover`}
-               src={homePageBanner} alt="home-page-banner" loading='lazy' placeholder="blur" unoptimized={true}/>
+               src={homePageBanner} alt="home-page-banner" loading='lazy' placeholder="blur" />
 
         <div className={'absolute top-0 h-full w-full bg-black opacity-30'}></div>
 
@@ -102,7 +102,7 @@ const Home = () => {
           <p className={'text-xl md:text-2xl w-3/4 '}>Optimizing support work and improving communication with the
             client
             through the introduction of AI Assistant</p>
-          <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>
+          <Button variant={'default'} className={'text-2xl p-6 text-foreground'}>
             <Link href={'/chat/'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
           </Button>
         </div>

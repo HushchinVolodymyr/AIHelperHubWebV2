@@ -1,7 +1,7 @@
 ﻿"use client"
 import React from 'react';
 import styles from "./page.module.scss"
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
 import {z} from "zod"
@@ -23,6 +23,12 @@ import IRegisterDto from "@/DTOs/IRegisterDto";
 import Link from "next/link";
 import {useRouter} from 'next/navigation'
 import {useAuth} from "@/hooks/use-auth";
+import useRecaptcha from "@/hooks/use-recaptcha";
+import ReCAPTCHA from "react-google-recaptcha";
+import Image from "next/image";
+import googleIcon from "@/public/google-icon.png";
+import {useGoogleLogin} from "@react-oauth/google";
+import IGoogleAuthDto from "@/DTOs/iGoogleAuthDto";
 
 // Register form schema (username, email, password, confirm password)
 const registerFormSchema = z.object({
@@ -46,72 +52,62 @@ const registerFormSchema = z.object({
 export default function Page() {
   const router = useRouter()
   // Authentication register hook 
-  const { register } = useAuth();
-  
+  const {register, loginViaGoogle} = useAuth();
+  // Captcha token state
+  const {capchaToken, recaptchaRef, handleRecaptcha} = useRecaptcha();
+
   // Register form base text
   const registerForm = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    }
   });
-  
+
+  // Google OAuthHook
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const googleAuthDto: IGoogleAuthDto = {accessToken: tokenResponse.access_token}
+      const response = await loginViaGoogle(googleAuthDto);
+
+      if (response && response.status === 200) router.push("/")
+    },
+    onError: () => console.error('Помилка входу'),
+  });
+
   // Register submit
   async function submitRegister(values: z.infer<typeof registerFormSchema>) {
-    // Check for empty inputs
-    if (values.username.trim() === "" || values.email.trim() === "" || values.password.trim() === "" || values.confirmPassword.trim() === "") {
-      toast({
-        variant: "destructive",
-        title: "Empty Fields",
-        description: "Please fill all fields",
-      });
+    // Check captcha token
+    if (!capchaToken) {
+      toast({variant: "destructive", description: "Press I`m not robot!"});
       return;
     }
-    
+
     // Check that password and confirm password the same
-    if (values.password !== values.confirmPassword){
+    if (values.password !== values.confirmPassword) {
       toast({
         variant: "destructive",
         title: "Password and confirm password do not match",
       });
       return;
     }
-    
+
     // Register data object
     const registerDto: IRegisterDto = {
       username: values.username,
       email: values.email,
       password: values.password,
+      captchaToken: capchaToken
     };
-    
-    try {
-      //Request to server (POST method)
-      const response = await register(registerDto)
-      
-      // Redirect if to home page if status code 201
-      if (response && response.status === 201){
-        router.push("/");
-      }
-      
-    } catch (error){
-      // Log errors
-      console.log(error)
-    }
+
+    //Request to server (POST method)
+    if (await register(registerDto)) router.push("/")
   }
 
   return (
     <div className={styles.registerPageContainer}>
       <Card className={styles.cardContainer}>
-        <CardHeader className={styles.cardHeader}>
-          <CardTitle>Register</CardTitle>
-          <CardDescription>
-            Enter your login, email, password and confirm password
-          </CardDescription>
+        <CardHeader className={'flex items-center '}>
+          <CardTitle><span className={"text-2xl"}>Register</span></CardTitle>
         </CardHeader>
-        <Separator className={styles.separator}/>
+        <Separator className={'my-2'}/>
         <CardContent>
           <Form {...registerForm}>
             <form onSubmit={registerForm.handleSubmit(submitRegister)}>
@@ -170,15 +166,32 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-              <div className={styles.loginFormButtons}>
+              <div className={'mt-4 w-full'}>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={`${process.env.NEXT_PUBLIC_RECAPTCHA_KEY}`}
+                  onChange={handleRecaptcha}
+                />
+              </div>
+              <div className={`flex flex-col mt-6 gap-4`}>
                 <Button type="submit" className={styles.registerFormSubmitButton}>Submit</Button>
-                <Button variant="outline" asChild>
-                  <Link href={"/login"}>Login</Link>
-                </Button>
+                <button
+                  onClick={() => googleLogin()}
+                  className={'flex gap-2 w-full items-center justify-center bg-white text-black p-2 rounded-md text-l border hover:bg-gray-100'}
+                >
+                  Sign up with google<span><Image src={googleIcon} alt="google-icon" height={20}/></span>
+                </button>
               </div>
             </form>
           </Form>
         </CardContent>
+        <Separator/>
+        <CardFooter className={'flex flex-col gap-2 w-full py-4 px-6'}>
+          <h3 className={"text-center"}>Already have account?</h3>
+          <Button variant="outline" asChild className={"w-full"}>
+            <Link href={"/login"}>Login</Link>
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );

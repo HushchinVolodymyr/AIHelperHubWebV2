@@ -18,8 +18,15 @@ export const getUser = async () => {
     
     if (response.status === 200) return response.data;
     
-  } catch (error) {
-    toast({variant: "destructive", title: "Error", description: "Request error"})
+  } catch (error: any) {
+    if (error.response) {
+      sessionStorage.removeItem("token");
+      toast({variant: "default", title: "Logout", description: "Token life time expired!"});
+      return  error.response.status;
+    } else {
+      toast({ variant: "destructive", title: "Error", description: "Network error" });
+      return null;
+    }
   }
 }
 

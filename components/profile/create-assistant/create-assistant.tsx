@@ -1,4 +1,5 @@
-﻿import React from 'react';
+﻿"use client"
+import React, {useEffect} from 'react';
 import styles from './create-assistant.module.scss'
 
 import {z} from 'zod'
@@ -36,6 +37,10 @@ import {Slider} from "@/components/ui/slider";
 import {Button} from "@/components/ui/button";
 import {BadgePlus} from "lucide-react";
 import {RootState, AppDispatch} from "@/store/store";
+import {setAssistant, unSetAssistant} from "@/store/assistantSlice";
+import {createAssistantRequest} from "@/services/assistant-service";
+import {Separator} from "@/components/ui/separator";
+import Chat from "@/components/chat/chat";
 
 // Create assistant schema
 const creatAssistantFromSchema = z.object({
@@ -58,7 +63,7 @@ const CreateAssistant = () => {
   const dispatch = useDispatch<AppDispatch>();
   // Assistant state
   const assistant = useSelector((state: RootState) => state.assistant)
-
+  
   // Create assistant form and assign default values
   const createAssistantForm = useForm<z.infer<typeof creatAssistantFromSchema>>({
     resolver: zodResolver(creatAssistantFromSchema),
@@ -79,7 +84,7 @@ const CreateAssistant = () => {
       toast({variant: "destructive", title: "Empty fields", description: "Please fill all fields"})
       return
     }
-
+    
     // Create DTO object for request
     const createAssistantDto: IAssistantCreate = {
       model: values.model,
@@ -89,14 +94,33 @@ const CreateAssistant = () => {
       temperature: values.temperature,
     }
 
-    await console.log(createAssistantDto)
+    const assistant_created = await createAssistantRequest(createAssistantDto)
+    
+    if (assistant_created) {
+      // Update assistant in Redux store
+      dispatch(setAssistant({
+        id: assistant_created.id,
+        name: assistant_created.name,
+        description: assistant_created.description,
+      }));
+    } else {
+      console.log("no data")
+      toast({ variant: "destructive", title: "Error", description: "Assistant creation failed" });
+    }
+    
   }
 
+  //Unset assistant on umount
+  useEffect(() => {
+    return () => {
+      dispatch(unSetAssistant())
+    }
+  }, []);
+  
   return (
     <div className={styles.mainContainer}>
-      <h1 className={styles.title}>Create Assistant</h1>
-      <div className={`gap-10 w-full mx-auto mt-4 md:flex md:w-3/4`}>
-        <section className={`md:w-1/2`}>
+      <div className={`gap-10 w-full mx-auto mt-4 lg:flex lg:w-3/4`}>
+        <section className={`lg:w-1/2 md:w-3/4 mx-auto`}>
           <Form {...createAssistantForm}>
             <form className={`flex flex-col gap-2`}
                   onSubmit={createAssistantForm.handleSubmit(submitCreateAssistant)}>
@@ -161,7 +185,7 @@ const CreateAssistant = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value={"gpt-4"}>Gpt-4</SelectItem>
+                        <SelectItem value={"gpt-4o"}>Gpt-4o</SelectItem>
                         <SelectItem value={"gpt-3o"}>Gpt-3o</SelectItem>
                       </SelectContent>
                     </Select>
@@ -217,17 +241,15 @@ const CreateAssistant = () => {
                   className={'mt-14 flex gap-1 text-l'}
                 ><BadgePlus/>Create</Button>
               }
-              
-              
-              
             </form>
           </Form>
         </section>
-        <section className={`md:w-1/2 flex items-center justify-center`}>
+        <Separator orientation="vertical" className={`h-100`} />
+        <section className={`lg:w-1/2 md:w-3/4 flex items-end justify-center mx-auto`}>
           {assistant.id == null ?
-            <h1 className={`text-3xl text-secondary`}>Assistant not created</h1>
+            <h1 className={`text-3xl text-secondary my-auto`}>Assistant not created</h1>
             :
-            <h1>{assistant.id}</h1>
+            <Chat assistant={assistant}/>
           }
         </section>
       </div>

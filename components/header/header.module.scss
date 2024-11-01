@@ -44,7 +44,7 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      gap: 1rem;
+      gap: .5rem;
       height: 100%;
       width: 10rem;
 
@@ -83,20 +83,8 @@
             font-size: 20px;
           }
         }
-        
-        .userDropDownSeparator{
-        
-        }
-        
       }
-      
 
-      .toggleContainer {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-      }
 
       .sheetContainer {
         display: none;

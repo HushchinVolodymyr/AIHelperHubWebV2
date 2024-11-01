@@ -1,9 +1,13 @@
 ﻿"use client"
 import React from 'react';
 import styles from "./page.module.scss"
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
+import Image from 'next/image'
+import googleIcon from '@/public/google-icon.png'
+
+import {useGoogleLogin} from '@react-oauth/google';
 import {z} from "zod"
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Separator} from "@/components/ui/separator";
@@ -18,11 +22,14 @@ import {
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {useForm} from "react-hook-form";
-import {toast} from "@/hooks/use-toast";
 import ILoginDto from "@/DTOs/iLoginDto";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useAuth} from "@/hooks/use-auth";
+import IGoogleAuthDto from "@/DTOs/iGoogleAuthDto";
+import ReCAPTCHA from 'react-google-recaptcha';
+import useRecaptcha from "@/hooks/use-recaptcha";
+import {toast} from "@/hooks/use-toast";
 
 // Login form schema (username, password)
 const loginFormSchema = z.object({
@@ -37,60 +44,52 @@ const loginFormSchema = z.object({
 export default function Page() {
   const router = useRouter()
   // Authentication login hook 
-  const { login } = useAuth();
+  const {login, loginViaGoogle} = useAuth();
+  // Captcha token state
+  const {capchaToken, recaptchaRef, handleRecaptcha} = useRecaptcha();
   
   // Login form base text
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    }
+    resolver: zodResolver(loginFormSchema)
+  });
+
+  // Google OAuthHook
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const googleAuthDto: IGoogleAuthDto = { accessToken: tokenResponse.access_token }
+      const response = await loginViaGoogle(googleAuthDto);
+
+      if (response && response.status === 200) router.push("/")
+    },
+    onError: () => console.error('Помилка входу'),
   });
   
   // Login submit
   async function submitLogin(values: z.infer<typeof loginFormSchema>) {
-    // Check for empty inputs
-    if (values.username.trim() === "" || values.password.trim() === "") {
-      toast({
-        variant: "destructive",
-        title: "Empty Fields",
-        description: "Please fill all fields",
-      })
-      return
+    // Check captcha token
+    if (!capchaToken) {
+      toast({variant: "destructive", description: "Press I`m not robot!"});
+      return;
     }
 
     // Login data object
     const LoginDto: ILoginDto = {
       username: values.username,
-      password: values.password
+      password: values.password,
+      captchaToken: capchaToken
     }
-
-    try {
-      //Request to server (POST method)
-      const response = await login(LoginDto)
-
-      // Redirect if to home page if status code 201
-      if (response && response.status === 200){
-        router.push("/");
-      }
-
-    } catch (error){
-      // Log errors
-      console.log(error)
-    }
+    
+    //Request to server (POST method)
+    if (await login(LoginDto)) router.push("/")
   }
 
   return (
     <div className={styles.loginPageContainer}>
       <Card className={styles.cardContainer}>
-        <CardHeader className={styles.cardHeader}>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>
-            Enter your login and password
-          </CardDescription>
+        <CardHeader className={'flex items-center '}>
+          <CardTitle><span className={"text-2xl"}>Login</span></CardTitle>
         </CardHeader>
-        <Separator className={styles.separator}/>
+        <Separator className={'my-2'}/>
         <CardContent>
           <Form {...loginForm}>
             <form onSubmit={loginForm.handleSubmit(submitLogin)}>
@@ -123,16 +122,35 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-              <div className={styles.loginFormButtons}>
-                <Button type="submit" className={styles.loginFormSubmitButton}>Submit</Button>
-                <Button variant="outline" asChild>
-                  <Link href={"/register"}>Register</Link>
-                </Button>
+              <div className={'mt-4 w-full'}>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={`${process.env.NEXT_PUBLIC_RECAPTCHA_KEY}`}
+                  onChange={handleRecaptcha}
+                />
+              </div>
+              <div className={`flex flex-col mt-6`}>
+                <Button type="submit">Submit</Button>
               </div>
             </form>
           </Form>
+
         </CardContent>
+        <Separator />
+        <CardFooter className={'flex flex-col gap-2 w-full py-4 px-6'}>
+          <h3 className={"text-center"}>Don`t have account?</h3>
+          <button
+            onClick={() => googleLogin()}
+            className={'flex gap-2 w-full items-center justify-center bg-white text-black p-2 rounded-md text-l border hover:bg-gray-100'}
+          >
+            Sign up with google<span><Image src={googleIcon} alt="google-icon" height={20}/></span>
+          </button>
+          <Button variant="outline" asChild className={"w-full"}>
+            <Link href={"/register"}>Register</Link>
+          </Button>
+
+        </CardFooter>
       </Card>
     </div>
-  );
+  )
 };
