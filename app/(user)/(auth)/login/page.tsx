@@ -1,7 +1,7 @@
 ﻿"use client"
 import React from 'react';
 import styles from "./page.module.scss"
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
 import Image from 'next/image'
