@@ -115,7 +115,7 @@ const CreateAssistant = () => {
     return () => {
       dispatch(unSetAssistant())
     }
-  }, []);
+  }, [dispatch]);
   
   return (
     <div className={styles.mainContainer}>

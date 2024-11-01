@@ -48,7 +48,7 @@ const Page = () => {
         <div className={"z-30 absolute top-0 h-full w-full flex flex-col items-center justify-between py-16"}>
           <h1 className={"text-3xl font-bold text-center px-2 md:text-5xl text-white"}>{assistants[0].name}</h1>
           <p className={"text-l font-bold p-4 text-center text-white md:w-[700px]"}
-             dangerouslySetInnerHTML={{__html: formatText(assistants[0].description)}}/>
+             dangerouslySetInnerHTML={{__html: formatText(`${assistants[0].description}`)}}/>
           <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>
             <Link href={'/chat/DBN_assistant'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
           </Button>
@@ -64,7 +64,7 @@ const Page = () => {
         <div className={"z-30 absolute top-0 h-full w-full flex flex-col items-center justify-between py-16"}>
           <h1 className={"text-3xl font-bold text-center px-2 text-white md:text-5xl"}>{assistants[1].name}</h1>
           <p className={"text-l font-semibold p-4 text-center text-white md:w-[700px]"}
-             dangerouslySetInnerHTML={{__html: formatText(assistants[1].description)}}/>
+             dangerouslySetInnerHTML={{__html: formatText(`${assistants[1].description}`)}}/>
           <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>
             <Link href={'/chat/General_knowledge_DEMO_assistant'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
           </Button>
@@ -80,7 +80,7 @@ const Page = () => {
         <div className={"z-30 absolute top-0 h-full w-full flex flex-col items-center justify-between py-16"}>
           <h1 className={"text-3xl font-bold text-center px-2 text-white md:text-5xl"}>{assistants[2].name}</h1>
           <p className={"text-l font-semibold p-4 text-center text-white md:w-[700px]"}
-             dangerouslySetInnerHTML={{__html: formatText(assistants[2].description)}}/>
+             dangerouslySetInnerHTML={{__html: formatText(`${assistants[2].description}`)}}/>
           <Button variant={'outline'} className={'text-2xl p-6 text-foreground'}>
             <Link href={'/chat/HelpDesk_assistant'} className={'flex text-2xl p-6'}>Try<ArrowUpRight className={'h-10'}/></Link>
           </Button>

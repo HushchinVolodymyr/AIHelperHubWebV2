@@ -42,7 +42,8 @@ const Header = () => {
     }
 
     fetchUser();
-  }, [user]);
+
+  }, [dispatch]);
 
   // logout action for button
   const logoutAction = async () => {
