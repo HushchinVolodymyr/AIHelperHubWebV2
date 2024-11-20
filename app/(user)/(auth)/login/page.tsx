@@ -1,5 +1,5 @@
 ﻿"use client"
-import React from 'react';
+import React, {useState} from 'react';
 import styles from "./page.module.scss"
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
@@ -30,6 +30,7 @@ import IGoogleAuthDto from "@/DTOs/iGoogleAuthDto";
 import ReCAPTCHA from 'react-google-recaptcha';
 import useRecaptcha from "@/hooks/use-recaptcha";
 import {toast} from "@/hooks/use-toast";
+import {useGoogleReCaptcha} from "react-google-recaptcha-v3";
 
 // Login form schema (username, password)
 const loginFormSchema = z.object({
@@ -42,45 +43,80 @@ const loginFormSchema = z.object({
 
 // Login page function
 export default function Page() {
+  // UI instances
+  const {recaptchaV2Visible, setRecaptchaV2Visible} = useState(false);
+
+  // Next router hook
   const router = useRouter()
   // Authentication login hook 
   const {login, loginViaGoogle} = useAuth();
   // Captcha token state
   const {capchaToken, recaptchaRef, handleRecaptcha} = useRecaptcha();
-  
+  // Google reCaptchaV3 instance
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+
   // Login form base text
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema)
   });
 
+
   // Google OAuthHook
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      const googleAuthDto: IGoogleAuthDto = { accessToken: tokenResponse.access_token }
+      const googleAuthDto: IGoogleAuthDto = {accessToken: tokenResponse.access_token}
       const response = await loginViaGoogle(googleAuthDto);
 
       if (response && response.status === 200) router.push("/")
     },
     onError: () => console.error('Помилка входу'),
   });
-  
+
+
   // Login submit
   async function submitLogin(values: z.infer<typeof loginFormSchema>) {
-    // Check captcha token
-    if (!capchaToken) {
-      toast({variant: "destructive", description: "Press I`m not robot!"});
-      return;
+    let token: string = '';
+    let captchaType: string = '';
+    
+    // Check reCaptcha type
+    if (recaptchaV2Visible) {
+      // Check captcha token
+      if (!capchaToken) {
+        toast({variant: "destructive", description: "Press I`m not robot!"});
+        return;
+      }     
+      
+      token = capchaToken.toString();
+      captchaType = "v2";
+    } else {
+      // Check if reCaptcha is available
+      if (!executeRecaptcha) {
+        console.log("Not available to execute reCaptcha");
+        return;
+      }
+
+      // Execute reCaptcha
+      token = await executeRecaptcha("inquirySubmit");
+      captchaType = "v3";
     }
 
     // Login data object
     const LoginDto: ILoginDto = {
-      username: values.username,
-      password: values.password,
-      captchaToken: capchaToken
+      token: token,
+      captchaType: captchaType,
+      userData: {
+        username: values.username,
+        password: values.password
+      }
     }
-    
+
     //Request to server (POST method)
-    if (await login(LoginDto)) router.push("/")
+    if (await login(LoginDto)) router.push("/") 
+    else {
+      setRecaptchaV2Visible(true)
+      toast({variant: "destructive", description: "Use recaptcha!"})
+    };
   }
 
   return (
@@ -122,13 +158,14 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-              <div className={'mt-4 w-full'}>
+              {recaptchaV2Visible ? <div className={'mt-4 w-full'}>
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={`${process.env.NEXT_PUBLIC_RECAPTCHA_KEY}`}
                   onChange={handleRecaptcha}
                 />
-              </div>
+              </div> : null}
+
               <div className={`flex flex-col mt-6`}>
                 <Button type="submit">Submit</Button>
               </div>
@@ -136,7 +173,7 @@ export default function Page() {
           </Form>
 
         </CardContent>
-        <Separator />
+        <Separator/>
         <CardFooter className={'flex flex-col gap-2 w-full py-4 px-6'}>
           <h3 className={"text-center"}>Don`t have account?</h3>
           <button
