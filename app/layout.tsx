@@ -6,7 +6,7 @@ import Header from "@/components/header/header";
 import {Toaster} from "@/components/ui/toaster";
 import {Montserrat} from 'next/font/google';
 import StoreProvider from "@/store/StoreProvider";
-import {GoogleOAuthProvider} from '@react-oauth/google';
+
 import dynamic from "next/dynamic";
 
 
@@ -22,26 +22,17 @@ export const metadata: Metadata = {
 };
 
 const GoogleAnalytics = dynamic(() => import('@/components/GoogleAnalytics'), {ssr: false});
-// const GoogleReCaptchaProvider = dynamic(
-//   () => import("react-google-recaptcha-v3").then(mod => mod.GoogleReCaptchaProvider),
-//   {ssr: false}
-// );
 
-// Google Recaptcha V3 key
-// const GoogleRecaptchaV3Key = process.env.NEXT_PUBLIC_RECAPTCHA_V3_KEY
 
-const GoogleClientID = process.env.NEXT_GOOGLE_OAUTH;
 
 
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
   return (
-
     <html lang="en">
     <body
       className={`${montserrat.variable}`}
       suppressHydrationWarning
     >
-    <GoogleOAuthProvider clientId={`${GoogleClientID}`}>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -54,12 +45,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
           <Toaster/>
         </StoreProvider>
       </ThemeProvider>
-    </GoogleOAuthProvider>
     <GoogleAnalytics/>
-    {/*<Script*/}
-    {/*  strategy={"beforeInteractive"}*/}
-    {/*  src={`https://www.google.com/recaptcha/api.js?render=${GoogleRecaptchaV3Key}`}*/}
-    {/*/>*/}
     </body>
     </html>
   );

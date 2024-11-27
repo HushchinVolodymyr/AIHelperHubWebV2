@@ -1,5 +1,6 @@
 ﻿export default interface IContactDto {
-  token: string, 
+  token: string,
+  captchaType: string,
   formData: {
     name: string,
     message: string,

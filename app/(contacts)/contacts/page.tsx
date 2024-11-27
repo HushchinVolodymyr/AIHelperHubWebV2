@@ -1,6 +1,6 @@
 ﻿"use client"
 import {Separator} from '@radix-ui/react-dropdown-menu';
-import React from 'react';
+import React, {useState} from 'react';
 import {z} from 'zod';
 import {useForm} from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -21,6 +21,9 @@ import IContactDto from "@/DTOs/iContactDto";
 import {contactService} from "@/services/contact-service";
 import {useGoogleReCaptcha} from "react-google-recaptcha-v3";
 import Link from "next/link";
+import ReCAPTCHA from "react-google-recaptcha";
+import useRecaptcha from "@/hooks/use-recaptcha";
+import {toast} from "@/hooks/use-toast";
 
 
 // Contact form schema
@@ -37,6 +40,10 @@ const contactFormSchema = z.object({
 function Contacts() {
   // Google reCaptcha instance
   const { executeRecaptcha } = useGoogleReCaptcha();
+  // Captcha token state
+  const {capchaToken, recaptchaRef, handleRecaptcha} = useRecaptcha();
+  // UI instances
+  const [ recaptchaV2Visible, setRecaptchaV2Visible ] = useState<boolean>(false);
   
   
   // Contact form instance
@@ -51,18 +58,36 @@ function Contacts() {
 
   // Submit contact form
   async function submitContactFrom(values: z.infer<typeof contactFormSchema>) {
-    // Check if reCaptcha is available
-    if (!executeRecaptcha) {
-      console.log("Not available to execute reCaptcha")
-      return;
-    };
-    
-    // Execute reCaptcha
-    const gReacaptchaToken = await executeRecaptcha("inquirySubmit");
+    // Captcha variables
+    let token: string = '';
+    let captchaType: string = '';
+
+    // Check reCaptcha type
+    if (recaptchaV2Visible) {
+      // Check captcha token
+      if (!capchaToken) {
+        toast({variant: "destructive", description: "Press I`m not robot!"});
+        return;
+      }
+
+      token = capchaToken.toString();
+      captchaType = "v2";
+    } else {
+      // Check if reCaptcha is available
+      if (!executeRecaptcha) {
+        console.log("Not available to execute reCaptcha");
+        return;
+      }
+
+      // Execute reCaptcha
+      token = await executeRecaptcha("inquirySubmit");
+      captchaType = "v3";
+    }
     
     // Create Dto to transfer data to server
     const ContactDto: IContactDto = {
-      token: gReacaptchaToken,
+      token: token,
+      captchaType: captchaType,
       formData: {
         name: values.name,
         message: values.message,
@@ -72,14 +97,16 @@ function Contacts() {
 
     // Send request to server
     if (await contactService(ContactDto)) contactForm.reset()
-
-    await console.log(values)
+    else {
+      toast({variant: "destructive", description: "Error while sending message"})
+      setRecaptchaV2Visible(true)
+    }
   }
 
 
   return (
     <>
-      <div className={` w-full h-full md:flex md:flex-row md:w-2/3`}>
+      <div className={`w-full h-full md:flex md:flex-row md:w-2/3`}>
         <section className={`p-4 h-full md:w-1/2 md:mt-20`}>
           <Form {...contactForm}>
             <form onSubmit={contactForm.handleSubmit(submitContactFrom)}>
@@ -126,6 +153,14 @@ function Contacts() {
                 )}
               />
 
+              {recaptchaV2Visible ? <div className={'mt-4 w-full'}>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={`${process.env.NEXT_PUBLIC_RECAPTCHA_KEY}`}
+                  onChange={handleRecaptcha}
+                />
+              </div> : null}
+              
               <Button type="submit" variant={"default"} className={`mt-4 w-full`}>Submit</Button>
             </form>
           </Form>
@@ -140,6 +175,6 @@ function Contacts() {
      
     </>
   );
-};
+}
 
 export default Contacts;

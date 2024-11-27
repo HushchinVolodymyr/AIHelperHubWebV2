@@ -29,6 +29,7 @@ import Image from "next/image";
 import googleIcon from "@/public/google-icon.png";
 import {useGoogleLogin} from "@react-oauth/google";
 import IGoogleAuthDto from "@/DTOs/iGoogleAuthDto";
+import {useGoogleReCaptcha} from "react-google-recaptcha-v3";
 
 // Register form schema (username, email, password, confirm password)
 const registerFormSchema = z.object({
@@ -50,11 +51,17 @@ const registerFormSchema = z.object({
 
 // Register page function
 export default function Page() {
+  // UI instances
+  const [recaptchaV2Visible, setRecaptchaV2Visible] = React.useState<boolean>(false);
+  
+  // Next router hook
   const router = useRouter()
   // Authentication register hook 
   const {register, loginViaGoogle} = useAuth();
   // Captcha token state
   const {capchaToken, recaptchaRef, handleRecaptcha} = useRecaptcha();
+  // Google reCaptchaV3 instance
+  const {executeRecaptcha} = useGoogleReCaptcha();
 
   // Register form base text
   const registerForm = useForm<z.infer<typeof registerFormSchema>>({
@@ -74,11 +81,9 @@ export default function Page() {
 
   // Register submit
   async function submitRegister(values: z.infer<typeof registerFormSchema>) {
-    // Check captcha token
-    if (!capchaToken) {
-      toast({variant: "destructive", description: "Press I`m not robot!"});
-      return;
-    }
+    // Captcha variables
+    let token: string = '';
+    let captchaType: string = '';
 
     // Check that password and confirm password the same
     if (values.password !== values.confirmPassword) {
@@ -88,17 +93,48 @@ export default function Page() {
       });
       return;
     }
+    
+    // Check reCaptcha type
+    if (recaptchaV2Visible) {
+      // Check captcha token
+      if (!capchaToken) {
+        toast({variant: "destructive", description: "Press I`m not robot!"});
+        return;
+      }
+
+      token = capchaToken.toString();
+      captchaType = "v2";
+    } else {
+      // Check if reCaptcha is available
+      if (!executeRecaptcha) {
+        console.log("Not available to execute reCaptcha");
+        return;
+      }
+
+      // Execute reCaptcha
+      token = await executeRecaptcha("inquirySubmit");
+      captchaType = "v3";
+    }
+
+    
 
     // Register data object
     const registerDto: IRegisterDto = {
-      username: values.username,
-      email: values.email,
-      password: values.password,
-      captchaToken: capchaToken
+      token: token,
+      captchaType: captchaType,
+      userData: {
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      }
     };
 
     //Request to server (POST method)
-    if (await register(registerDto)) router.push("/")
+    if (await register(registerDto)) router.push("/");
+    else {
+      setRecaptchaV2Visible(true)
+      toast({variant: "destructive", description: "Use recaptcha!"})
+    }
   }
 
   return (
@@ -166,13 +202,13 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-              <div className={'mt-4 w-full'}>
+              {recaptchaV2Visible ? <div className={'mt-4 w-full'}>
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={`${process.env.NEXT_PUBLIC_RECAPTCHA_KEY}`}
                   onChange={handleRecaptcha}
                 />
-              </div>
+              </div> : null}
               <div className={`flex flex-col mt-6 gap-4`}>
                 <Button type="submit" className={styles.registerFormSubmitButton}>Submit</Button>
                 <button

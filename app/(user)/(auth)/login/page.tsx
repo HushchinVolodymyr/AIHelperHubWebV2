@@ -44,7 +44,7 @@ const loginFormSchema = z.object({
 // Login page function
 export default function Page() {
   // UI instances
-  const {recaptchaV2Visible, setRecaptchaV2Visible} = useState(false);
+  const [ recaptchaV2Visible, setRecaptchaV2Visible ] = useState<boolean>(false);
 
   // Next router hook
   const router = useRouter()
@@ -76,6 +76,7 @@ export default function Page() {
 
   // Login submit
   async function submitLogin(values: z.infer<typeof loginFormSchema>) {
+    // Captcha variables
     let token: string = '';
     let captchaType: string = '';
     
@@ -115,8 +116,8 @@ export default function Page() {
     if (await login(LoginDto)) router.push("/") 
     else {
       setRecaptchaV2Visible(true)
-      toast({variant: "destructive", description: "Use recaptcha!"})
-    };
+      toast({variant: "destructive", description: "Use recaptcha! Check user data!"})
+    }
   }
 
   return (

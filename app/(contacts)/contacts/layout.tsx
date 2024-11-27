@@ -3,8 +3,8 @@ import CaptchaV3Wrapper from "@/components/captcha-v3-wrapper";
 
 export default function ContactsLayout({children}: { children: React.ReactNode }) {
   return (
-    <div className="mt-16">
-      <main className="w-screen flex justify-center">
+    <div className="w-full mt-16">
+      <main className="w-full flex justify-center">
         <CaptchaV3Wrapper>
           {children}
         </CaptchaV3Wrapper>
