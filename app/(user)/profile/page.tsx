@@ -17,6 +17,9 @@ const Page = () => {
   const user = useSelector((state: RootState) => state.user);
   // Router for redirecting
   const router = useRouter();
+  
+  // Temporary redirect to main page
+  router.push("/");
 
 
   // If no user redirect to main page
