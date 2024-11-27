@@ -1,6 +1,9 @@
 ﻿export default interface IRegisterDto {
-  username: string;
-  email: string;
-  password: string;
-  captchaToken: string;
+  token: string;
+  captchaType: string;
+  userData: {
+      username: string;
+      email: string;
+      password: string;
+  }
 }

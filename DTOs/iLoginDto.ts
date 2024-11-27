@@ -1,5 +1,8 @@
 ﻿export default interface ILoginDto {
-  username: string;
-  password: string;
-  captchaToken: string;
+  token: string;
+  captchaType: string;
+  userData: {
+    username: string;
+    password: string;
+  }
 }
