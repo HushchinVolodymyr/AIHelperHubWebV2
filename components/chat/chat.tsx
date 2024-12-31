@@ -47,7 +47,8 @@ const Chat = ({assistant}: { assistant: IAssistant }) => {
     const message: IMessage = {
       id: chatHistory.length + 1,
       messageType: true,
-      message: values.message
+      message: values.message,
+      responseConfidence: 0
     }
     
     // Reset message form
