@@ -1,5 +1,6 @@
 ﻿export default interface IMessage {
     id: number,
     messageType: boolean,
-    message: string
+    message: string,
+    responseConfidence: number
 }
