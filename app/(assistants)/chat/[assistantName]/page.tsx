@@ -42,11 +42,11 @@ const assistants: IAssistant[] = [
     name: "HelpDesk_assistant",
     description: "Overview of positions in technology: delivery management, software development, SEO, business analysis, mobile development, and design. Various opportunities across different domains."
   },
-  {
-    id: 4,
-    name: "Papara Demo",
-    description: "Papara is a digital wallet and payment platform that allows users to make transactions, pay bills, and transfer money. It offers secure and convenient services for online and offline payments."
-  }
+  // {
+  //   id: 4,
+  //   name: "Papara Demo",
+  //   description: "Papara is a digital wallet and payment platform that allows users to make transactions, pay bills, and transfer money. It offers secure and convenient services for online and offline payments."
+  // }
 ]
 
 const messageFormSchema = z.object({

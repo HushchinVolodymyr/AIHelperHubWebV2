@@ -5,7 +5,7 @@ import Image from 'next/image'
 import firstAssistantImg from "@/public/examples-page/1.jpg"
 import secondAssistantImg from "@/public/examples-page/2.jpg"
 import thirdAssistantImg from "@/public/examples-page/3.jpg"
-import fourthAssistantImg from "@/public/examples-page/4.jpg"
+//import fourthAssistantImg from "@/public/examples-page/4.jpg"
 import IAssistant from "@/interfaces/iAssistant";
 import Link from "next/link";
 import {ArrowUpRight} from "lucide-react";
@@ -29,11 +29,11 @@ const assistants: IAssistant[] = [
     name: "HelpDesk_assistant",
     description: "Overview of positions in technology: delivery management, software development, SEO, business analysis, mobile development, and design. Various opportunities across different domains."
   },
-  {
-    id: 4,
-    name: "Papara Demo",
-    description: "Papara is a digital wallet and payment platform that allows users to make transactions, pay bills, and transfer money. It offers secure and convenient services for online and offline payments."
-  }
+  // {
+  //   id: 4,
+  //   name: "Papara Demo",
+  //   description: "Papara is a digital wallet and payment platform that allows users to make transactions, pay bills, and transfer money. It offers secure and convenient services for online and offline payments."
+  // }
 ]
 
 
@@ -95,7 +95,7 @@ const Page = () => {
           </Button>
         </div>
       </section>
-      <Separator className={"my-2 w-full"}/>
+      {/* <Separator className={"my-2 w-full"}/>
       <section className={"relative w-full h-[400px]"}>
         <div className={"relative w-full h-full"}>
           <Image className={"object-cover w-full h-full"}
@@ -111,7 +111,7 @@ const Page = () => {
               className={'h-10'}/></Link>
           </Button>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };
